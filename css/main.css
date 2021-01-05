@@ -1,0 +1,419 @@
+@charset "utf-8";
+/*
+    @charset은 외부css의 언어인코딩 설정임(필수!)
+    "utf-8" 은 2바이트 문자도 깨짐없이 인코딩 설정
+*/
+/*
+
+    @import url(경로)
+    - 다른 외부 CSS를 불러와서 합치는 방식(merging머징)
+    - CSS의 상단에 코딩한다(@charset 아래)
+    - link방식에 비해 효율성이 좋아짐
+*/
+
+/*CDN방식 웹폰트*/
+@import url('https://fonts.googleapis.com/css?family=Cute+Font|Jua&display=swap');
+/*
+    font-family: 'Cute Font', cursive;
+    font-family: 'Jua', sans-serif;
+*/
+
+/*공통초기화*/
+html,
+body,
+h1,
+h2,
+h3 {
+    margin: 0;
+    padding: 0;
+}
+
+/*전체배경색*/
+body {
+    /*검정색배경*/
+    background-color: #000;
+    /*흰색글씨*/
+    color: #fff;
+}
+
+/******공통 레이아웃 class**********/
+.part {
+    width: 1200px;
+    margin: 0 auto;
+    /*outline: 3px dashed lime;*/
+}
+
+/******각 영역별 레이아웃*****/
+/*A.상단영역*/
+#top {
+    position: relative;
+    /*부모자격!*/
+    height: 80px;
+    z-index: 999;
+    /*아래쪽 레이아웃박스 보다 위!*/
+}
+
+/*B.메인영역*/
+#cont {
+    position: relative;
+    /*부모자격*/
+    height: 788px;
+    background: url(../images/bg.jpg) no-repeat;
+}
+
+/*
+
+[ 웹 경로 설정방법 ]
+1. 절대경로 : 웹 사이트의 root(최상위폴더)를 
+            기준한 경로 표기법
+            슬래쉬로 시작함 - /경로...
+2. 상대경로 : 현재위치를 기준한 경로 표기법
+            1) 현재파일위치 폴더 ./
+            2) 현재파일 폴더의 부모폴더 ../
+3. 외부경로 : http로 시작하는 웹경로
+*/
+
+/*C.하단영역*/
+#info {
+    position: relative;
+    /*부모자격*/
+    height: 100px;
+}
+
+/******** 각 구성요소 디자인 *********/
+/*1. 전체타이틀*/
+.tit {
+    height: 100%;
+    text-align: center;
+    font-family: 'Jua', sans-serif;
+    font-size: 40px;
+    line-height: 80px;
+    color: aquamarine;
+    /*텍스트그림자로 글로우 효과*/
+    /* x y blur color */
+    text-shadow: 0 0 10px aquamarine;
+    /*배경이미지*/
+    background: url(../images/curtain.jpg) repeat-x;
+}
+
+/*2. GNB메뉴*/
+.gnb {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    /*나의부모? #top
+        #top에 부모자격을 줌
+        부모자격은 static이
+    아니면됨! 기존 디자인을
+    해치지 않는 포지션은 
+    relative 가 주로 사용됨!
+    */
+}
+
+.gnb ul {
+    /*3無*/
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    /*outline: 2px solid red;*/
+}
+
+/*float된 자식의 높이값인식*/
+/*가상요소 clear:both*/
+.gnb ul::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+
+.gnb ul > li {/*상위메뉴 li만 선택*/
+    position: relative;
+    /*부모자격-서브메뉴박스*/
+    /*block요소 옆으로 흐르게*/
+    float: left;
+    padding: 0 10px;
+}
+
+.gnb ul li a {
+    /*글자색과 밑줄은 a요소에서
+    변경해야함! 여기에 기본셋팅
+    있으므로!*/
+    color: #fff;
+    text-decoration: none;
+    /*글자체*/
+    font-family: 'Jua', sans-serif;
+    font-size: 16px;
+}
+
+/*서브메뉴박스*/
+.smenu{
+    position: absolute;
+    left: 50%;
+    /*부모? 싸고있는 .gnb ul>li*/
+    transform: translateX(-50%);
+    /*가로중앙이동*/
+    width: 100px;
+    padding: 5px;
+    background: url(../images/bg_smenu.png) no-repeat center/cover;
+    /*outline: 2px solid aqua;*/
+    display: none;
+    /*처음에 서브메뉴 안보임!*/
+}
+/*상위메뉴li에 마우스 오버시 하위메뉴 보이기*/
+.gnb ul>li:hover .smenu{
+    display: block;
+}
+
+/*가상요소로 삼각형 만들기!*/
+.smenu::before{
+    content: "";
+    display: block;
+    position: absolute;
+    top: -5px;
+    left: 45px;
+    /*부모? .smenu*/
+    width: 0px;
+    height: 0px;
+    /*정삼각형 보더로 만들기*/
+    border-bottom: 10px solid #ccc;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    /*역삼각형은 border-bottom 대신 
+    border-top으로 함*/
+}
+
+
+.smenu ol{
+    border: 2px solid #ccc;
+    margin: 0;
+    padding: 10px;
+    list-style: none;
+    
+}
+/*적용우선순위를 높이려면
+기존 셋팅의 부모를 앞에 쓴다!*/
+.gnb .smenu a{
+    font-size: 11px;
+}
+/*서브메뉴 a요소에 마우스 오버시*/
+/*글자색변경*/
+.gnb .smenu a:hover{
+    color: #f00;
+}
+/*가상요소로 손가락모양 넣기*/
+.gnb .smenu a:hover::after{
+    content: "☞";
+    float: right;
+    position: relative;
+    /*현재 위치에서 위치이동이 필요할경우
+    다른요소에 영향없이 움직일때도 사용함!*/
+    top: 5px;
+    left: 5px;
+}
+
+/*서브메뉴 구분선*/
+.sbar {
+    margin-top: 5px;
+    border-top: 2px solid #ccc;
+}
+
+
+
+/*3. 스크린박스*/
+#screen {
+    position: absolute;
+    top: 136px;
+    left: 257px;
+    /*나의 부모는? #cont*/
+    width: 701px;
+    height: 398px;
+    background-color: #000;
+}
+
+/*스크린 아이프레임*/
+#screen iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/*4. 영화선택메뉴*/
+.mlist {
+    position: absolute;
+    /*부모자격-.movtxt의 부모*/
+    bottom: 56px;
+    left: 252px;
+    /*나의 부모는? #cont*/
+    overflow: hidden;
+    /*자식요소인 .movtxt를 숨기기위해 
+    부모자격 박스에 설정한다!
+    (다른 일반부모요소엔 적용되지 않는다!)*/
+}
+
+.mlist ul {
+    /*3無*/
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    overflow: hidden;
+    /*float자식요소 높이값 인식*/
+    /*outline: 10px solid cyan;*/
+}
+
+/*
+    ul>li 는 직계자식 li만 
+    float 등 설정적용됨!
+*/
+.mlist ul > li {
+    float: left;
+    /*옆으로흐르게*/
+    padding: 0 10px;
+    /*패딩 양쪽 10px*/
+
+    /*커서변경하기*/
+    cursor: pointer;
+    /*손가락모양
+    여러모양 옵션 참조:
+    https://www.w3schools.com/cssref/playit.asp?filename=playcss_cursor&preval=alias
+    */
+}
+
+/*썸네일 포스터 이미지 크기지정으로 li크기만들기*/
+.mlist img {
+    width: 99px;
+    height: 140px;
+}
+
+/*5. 영화정보박스*/
+ol.movtxt {
+    position: absolute;
+    /*위치이동값을 안주면 젠틀하다!*/
+    top: 100%;
+    /*높이값 만큼 아래로 밀어놓기*/
+    /*top방향의 부모는? .mlist*/
+    /*
+        주의사항: 편리한 코딩을 위해
+        left값은 설정하지 않아도 된다!
+    
+        left는 젠틀하여 그자리에 그대로 배치된다.
+        만약 left를 주면 싸고 있는 li에 부모설정 등 
+        더 복잡한 셋팅을 해야만 한다.
+    */
+    
+    /*크기지정-이미지와 동일 크기*/
+    width: 99px;
+    height: 140px;
+    
+    /*글자셋팅*/
+    text-align: center;
+    font: 14px/25px 'Cute Font';
+    
+    /*반투명배경색*/
+    background-color: rgba(0, 0, 0, 0.7);
+    
+    /*outline: 2px solid red;*/
+    
+    
+    /*3無*/
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    
+    /*트랜지션*/
+    transition: top .4s ease-out;
+
+}
+
+/*영화선택메뉴 li에 마우스 오버시 .movtxt 올라오기*/
+.mlist>ul>li:hover .movtxt{
+    top: 0;
+}
+
+
+/*영화정보리스트*/
+/*부모 li의 float이 적용되지 않음!*/
+/*영화정보리스트 첫번째 항목(제목)에 마진,글자색/크기변경*/
+.movtxt li:first-child {
+    margin-top: 30px;
+    color: aqua;
+    font-size: 17px;
+}
+
+/*6.회사정보박스*/
+#info address{
+    font-style: normal;
+    /*address요소의 기본 이탤릭 해제*/
+    font-size: 18px;
+    font-family: 'Cute Font';
+    line-height: 20px;
+    /*안쪽여백*/
+    padding-top: 20px;
+    padding-left: 20px;
+}
+/*하단로고이미지*/
+#info address img{
+    float: left;
+    /*이미지 옆으로 글자 흐르게*/
+    margin-right: 20px;
+}
+
+/*7.sns바로가기 박스*/
+.sns{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    /*나의부모? #info*/
+    
+    /*3無*/
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.sns li{
+    float: left;
+    width: 34px;
+    height: 34px;
+    margin: 2px;
+    /*outline: 2px solid lime;*/
+    /*공통 배경이미지*/
+    background: url(../images/sprites_logo.png) no-repeat;
+}
+/*
+    [ 스프라이츠 위치정보 알아내기 ]
+    - 포토샵에서 사각선택툴로 맨위에서 부터 알고자하는 위치까지
+    드래그하여 가로크기는 배경 left, 세로크기는 배경 top값으로 셋팅함
+*/
+.sns li:first-child{/*페이스북*/
+    background-position: -509px -429px;
+}
+
+.sns li:nth-child(2){/*트위터*/
+    background-position: -551px -429px;
+}
+
+.sns li:last-child{/*인스타그램*/
+    background-position: -593px -429px;
+}
+
+/*a요소 확장*/
+.sns a{
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+/*IR(배경이미지 설명)*/
+.bld{
+    display: block;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+
+
+
+
+
+
